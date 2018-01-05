@@ -224,6 +224,7 @@ void rs_device_base::start(rs_source source)
     initialize_motion();
     if (source == RS_SOURCE_MOTION_TRACKING)
     {
+        std::cout << "RS_DEVICE_BASE::START > RS_SOURCE_MOTION_TRACKING" << std::endl;
         if (supports(RS_CAPABILITIES_MOTION_EVENTS))
             start_motion_tracking();
         else
@@ -231,10 +232,12 @@ void rs_device_base::start(rs_source source)
     }
     else if (source == RS_SOURCE_VIDEO)
     {
+        std::cout << "RS_DEVICE_BASE::START > RS_SOURCE_VIDEO" << std::endl;
         start_video_streaming();
     }
     else if (source == RS_SOURCE_ALL)
     {
+        std::cout << "RS_DEVICE_BASE::START > RS_SOURCE_ALL" << std::endl;
         start(RS_SOURCE_MOTION_TRACKING);
         start(RS_SOURCE_VIDEO);
     }

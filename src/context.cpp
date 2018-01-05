@@ -73,6 +73,7 @@ rs_context_base::rs_context_base()
                 if (is_fisheye_present(*device)) {
                     //TODO: create MM module
                     rs_dev = rsimpl::make_lr200_mm_device(device);
+                    // rs_dev = rsimpl::make_zr300_device(device);
                 } else {
                     rs_dev = rsimpl::make_lr200_device(device); 
                 }

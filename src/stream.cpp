@@ -55,7 +55,7 @@ void native_stream::get_mode(int mode, int * w, int * h, rs_format * f, int * fp
     if(stream == RS_STREAM_FISHEYE) {
         if(w) *w = 640;
         if(h) *h = 480;
-        if(f) *f = RS_FORMAT_Y8;
+        if(f) *f = RS_FORMAT_RAW8;
         if(fps) *fps = 30;
         return;
     }

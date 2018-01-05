@@ -62,6 +62,7 @@ set(REALSENSE_CPP
     src/ivcam-private.cpp
     src/ivcam-device.cpp
     src/log.cpp
+    src/lr200_mm.cpp
     src/motion-module.cpp
     src/r200.cpp
     src/rs.cpp
@@ -89,6 +90,7 @@ set(REALSENSE_HPP
     src/image.h
     src/ivcam-private.h
     src/ivcam-device.h
+    src/lr200_mm.h
     src/motion-module.h
     src/r200.h
     src/sr300.h
@@ -130,6 +132,12 @@ if(UNIX)
     )
 
     find_package(PkgConfig REQUIRED)
+#    find_package(motionHAL REQUIRED)
+#    if(motionHAL_FOUND)
+#      message("motionHAL FOUND!")
+#    else()
+#      message(WARNING "motionHAL NOT found!")
+#    endif(motionHAL_FOUND)
     pkg_search_module(LIBUSB1 REQUIRED libusb-1.0)
     if(LIBUSB1_FOUND)
       include_directories(SYSTEM ${LIBUSB1_INCLUDE_DIRS})
@@ -161,7 +169,8 @@ include(GNUInstallDirs)
 option(BUILD_SHARED_LIBS "Build shared library" ON)
 if(BUILD_SHARED_LIBS)
     add_library(realsense SHARED ${REALSENSE_CPP} ${REALSENSE_HPP} ${REALSENSE_DEF})
-    target_link_libraries(realsense ${LIBUSB1_LIBRARIES})
+    target_link_libraries(realsense ${LIBUSB1_LIBRARIES} /usr/lib/libmotionHAL.so)
+    # target_link_libraries(realsense ${LIBUSB1_LIBRARIES} ${LIBMOTIONHAL_LIBRARIES})
 else()
     add_library(realsense STATIC ${REALSENSE_CPP} ${REALSENSE_HPP})
 endif()

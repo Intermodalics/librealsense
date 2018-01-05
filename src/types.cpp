@@ -530,6 +530,22 @@ namespace rsimpl
             }
         }
 
+        {
+            std::ostream& ss = std::cout;
+            ss << "REQUESTED MODES: \n";
+            bool first = true;
+            for(int j = 0; j < RS_STREAM_NATIVE_COUNT; ++j)
+            {
+                if(!stream_requested[j]) continue;
+                ss << (first ? " " : " and ");
+                ss << requests[j].width << 'x' << requests[j].height << ':' << get_string(requests[j].format);
+                ss << '@' << requests[j].fps << "Hz " << get_string((rs_stream)j);
+                first = false;
+            }
+            ss << std::endl;
+        }
+        std::cout << "AVAILABLE MODES: " << std::endl;
+
         // If no streams were requested, skip to the next subdevice
         if(!any_stream_requested) return subdevice_mode_selection();
 
@@ -553,6 +569,11 @@ namespace rsimpl
                         const auto & req = requests[output.first];
                         
                         selection.set_output_buffer_format(req.output_format);
+
+                        std::cout << selection.get_width() << "x" << selection.get_height() << ":"
+                            << get_string(selection.get_format(output.first)) << '@' << subdevice_mode.fps << "Hz "
+                            << get_string((rs_stream)output.first) << std::endl;
+
                         if(req.enabled && (req.width == selection.get_width() )
                                        && (req.height == selection.get_height())
                                        && (req.format == selection.get_format(output.first))
