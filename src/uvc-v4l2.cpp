@@ -34,6 +34,8 @@
 #include <linux/uvcvideo.h>
 #include <linux/videodev2.h>
 
+#include <iostream>
+
 #pragma GCC diagnostic ignored "-Wpedantic"
 #include <libusb.h>
 #pragma GCC diagnostic pop
@@ -449,6 +451,7 @@ namespace rsimpl
 
             void start_data_acquisition()
             {
+                std::cout << "uvc-v4l2: start_data_acquisition" << std::endl;
                 std::vector<subdevice *> data_channel_subs;
                 for (auto & sub : subdevices)
                 {                   
@@ -725,6 +728,15 @@ namespace rsimpl
 
         std::vector<std::shared_ptr<device>> query_devices(std::shared_ptr<context> context)
         {
+            // Check if the uvcvideo kernel module is loaded
+            struct stat info;
+            int err = stat("/sys/module/uvcvideo/", &info);
+            if (err == -1  // errno==ENOENT, typically
+               || !S_ISDIR(info.st_mode) )
+            {
+                throw std::runtime_error("uvcvideo kernel module is not loaded");
+            }
+
             // Enumerate all subdevices present on the system
             std::vector<std::unique_ptr<subdevice>> subdevices;
             DIR * dir = opendir("/sys/class/video4linux");

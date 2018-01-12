@@ -17,6 +17,7 @@
 #include <stdexcept>
 #include <functional>
 #include <vector>
+#include <iostream>
 
 namespace rs
 {
@@ -840,6 +841,7 @@ namespace rs
         /// \return                       Frame rate of the stream, in frames per second
         void enable_motion_tracking(std::function<void(motion_data)> motion_handler, std::function<void(timestamp_data)> timestamp_handler)
         {
+            std::cout << "rs.hpp: enable_motion_tracking" << std::endl;
             rs_error * e = nullptr;            
             rs_enable_motion_tracking_cpp((rs_device *)this, new motion_callback(motion_handler), new timestamp_callback(timestamp_handler), &e);
             error::handle(e);
@@ -877,7 +879,8 @@ namespace rs
 
         /// \brief Begins streaming on all enabled streams for this device
         void start(rs::source source = rs::source::video)
-        {            
+        {
+            std::cout << "rs.hpp: void start(rs::source source = rs::source::video)" << std::endl;           
             rs_error * e = nullptr;
             rs_start_source((rs_device *)this, (rs_source)source, &e);
             error::handle(e);

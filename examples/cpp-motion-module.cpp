@@ -80,7 +80,10 @@ int main() try
         // 1. Make motion-tracking available
         if (dev->supports(rs::capabilities::motion_events))
         {
+            std::cout << "enabling motion tracking" << std::endl;
             dev->enable_motion_tracking(motion_callback, timestamp_callback);
+        } else {
+            std::cout << "motion events not supported" << std::endl;
         }
 
         // 2. Optional - configure motion module
@@ -112,6 +115,7 @@ int main() try
         logs.reserve(10000);
 
         // 3. Start generating motion-tracking data
+        std::cout << "starting device with all sources" << std::endl;
         dev->start(rs::source::all_sources);
 
         printf("\nThe application is collecting data for next 10sec...\n");

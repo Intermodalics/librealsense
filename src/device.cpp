@@ -117,6 +117,8 @@ void rs_device_base::set_stream_callback(rs_stream stream, rs_frame_callback* ca
 
 void rs_device_base::enable_motion_tracking()
 {
+    LOG_WARNING("rs_device_base::enable_motion_tracking");
+    std::cout << "rs_device_base::enable_motion_tracking" << std::endl;
     if (data_acquisition_active) throw std::runtime_error("motion-tracking cannot be reconfigured after having called rs_start_device()");
 
     config.data_request.enabled = true;
@@ -124,6 +126,7 @@ void rs_device_base::enable_motion_tracking()
 
 void rs_device_base::disable_motion_tracking()
 {
+    LOG_WARNING("rs_device_base::disable_motion_tracking");
     if (data_acquisition_active) throw std::runtime_error("motion-tracking disabled after having called rs_start_device()");
 
     config.data_request.enabled = false;
@@ -139,6 +142,7 @@ void rs_device_base::set_motion_callback(rs_motion_callback* callback)
 
 void rs_device_base::start_motion_tracking()
 {
+    std::cout << "rs_device_base::start_motion_tracking()" << std::endl;
     if (data_acquisition_active) throw std::runtime_error("cannot restart data acquisition without stopping first");
 
     auto parser = std::make_shared<motion_module_parser>();
@@ -146,16 +150,20 @@ void rs_device_base::start_motion_tracking()
     // Activate data polling handler
     if (config.data_request.enabled)
     {
+        std::cout << "rs_device_base::start_motion_tracking activate data polling" << std::endl;
         // TODO -replace hard-coded value 3 which stands for fisheye subdevice   
         set_subdevice_data_channel_handler(*device, 3,
             [this, parser](const unsigned char * data, const int size) mutable
         {
+            std::cout << "rs_device_base::start_motion_tracking checking if module ready" << std::endl;
             if (motion_module_ready)    //  Flush all received data before MM is fully operational 
             {
+                std::cout << "rs_device_base::start_motion_tracking motion module is ready" << std::endl;
                 // Parse motion data
                 auto events = (*parser)(data, size);
 
                 // Handle events by user-provided handlers
+                std::cout << "handling imu events" << std::endl;
                 for (auto & entry : events)
                 {
                     // Handle Motion data packets
@@ -214,8 +222,10 @@ void rs_device_base::set_timestamp_callback(rs_timestamp_callback* callback)
 
 void rs_device_base::start(rs_source source)
 {
+    std::cout << "rs_device_base::start" << std::endl;
     if (source == RS_SOURCE_MOTION_TRACKING)
     {
+        std::cout << "source is RS_SOURCE_MOTION_TRACKING" << std::endl;
         if (supports(RS_CAPABILITIES_MOTION_EVENTS))
             start_motion_tracking();
         else

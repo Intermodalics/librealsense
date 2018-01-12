@@ -3,6 +3,7 @@
 
 #include <functional>   // For function
 #include <climits>
+#include <iostream>
 
 #include "context.h"
 #include "device.h"
@@ -340,9 +341,13 @@ void rs_enable_motion_tracking(rs_device * device,
     rs_timestamp_callback_ptr on_timestamp_event, void * timestamp_handler,
     rs_error ** error) try
 {
+    std::cout << "rs_enable_motion_tracking" << std::endl;
     VALIDATE_NOT_NULL(device);
     VALIDATE_NOT_NULL(on_motion_event);
     VALIDATE_NOT_NULL(on_timestamp_event || on_motion_event);
+    
+    std::cout << "passed all VALIDATE_NOT_NULL" << std::endl;
+    
     device->enable_motion_tracking();
     device->set_motion_callback(on_motion_event, motion_handler);
     device->set_timestamp_callback(on_timestamp_event, timestamp_handler);
@@ -354,9 +359,13 @@ void rs_enable_motion_tracking_cpp(rs_device * device,
     rs_timestamp_callback * ts_callback,
     rs_error ** error) try
 {
+    std::cout << "rs_enable_motion_tracking_cpp" << std::endl;
     VALIDATE_NOT_NULL(device);
     VALIDATE_NOT_NULL(motion_callback);
     VALIDATE_NOT_NULL(ts_callback);
+    
+    std::cout << "passed all VALIDATE_NOT_NULL" << std::endl;    
+
     device->enable_motion_tracking();
     device->set_motion_callback(motion_callback);
     device->set_timestamp_callback(ts_callback);
@@ -389,8 +398,10 @@ HANDLE_EXCEPTIONS_AND_RETURN(, device)
 
 void rs_start_source(rs_device * device, rs_source source, rs_error ** error) try
 {
+    std::cout << "rs_start_source(rs_device * device, rs_source source, rs_error ** error)" << std::endl;
     VALIDATE_NOT_NULL(device); 
     VALIDATE_ENUM(source);
+    std::cout << "passed all VALIDATE" << std::endl;
     device->start(source);
 }
 HANDLE_EXCEPTIONS_AND_RETURN(, device, source)

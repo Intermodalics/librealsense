@@ -197,12 +197,14 @@ namespace rsimpl
     }
 
     void zr300_camera::toggle_motion_module_power(bool on)
-    {        
+    {  
+        LOG_WARNING("zr300_camera::toggle_motion_module_power on");        
         motion_module_ctrl.toggle_motion_module_power(on);
     }
 
     void zr300_camera::toggle_motion_module_events(bool on)
     {
+        LOG_WARNING("zr300_camera::toggle_motion_module_events on");
         motion_module_ctrl.toggle_motion_module_events(on);
         motion_module_ready = on;
     }
@@ -233,6 +235,7 @@ namespace rsimpl
     // Power on motion module (mmpwr)
     void zr300_camera::start_motion_tracking()
     {
+        LOG_WARNING("zr300_camera::start_motion_tracking");
         rs_device_base::start_motion_tracking();
         if (supports(RS_CAPABILITIES_MOTION_EVENTS))
             toggle_motion_module_events(true);
@@ -241,6 +244,7 @@ namespace rsimpl
     // Power down Motion Module
     void zr300_camera::stop_motion_tracking()
     {
+        LOG_WARNING("zr300_camera::stop_motion_tracking");
         if (supports(RS_CAPABILITIES_MOTION_EVENTS))
             toggle_motion_module_events(false);
         rs_device_base::stop_motion_tracking();
