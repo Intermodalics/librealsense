@@ -150,7 +150,7 @@ void rs_device_base::start_motion_tracking()
     // Activate data polling handler
     if (config.data_request.enabled)
     {
-        std::cout << "rs_device_base::start_motion_tracking activate data polling" << std::endl;
+        std::cout << "rs_device_base::start_motion_tracking set_subdevice_data_channel_handler" << std::endl;
         // TODO -replace hard-coded value 3 which stands for fisheye subdevice   
         set_subdevice_data_channel_handler(*device, 3,
             [this, parser](const unsigned char * data, const int size) mutable
@@ -186,8 +186,10 @@ void rs_device_base::start_motion_tracking()
                 }
             }
         });
+        std::cout << "rs_device_base::start_motion_tracking set_subdevice_data_channel_handler done" << std::endl;
     }
 
+    std::cout << "rs_device_base::start_motion_tracking starting data aquisition" << std::endl;
     start_data_acquisition(*device);     // activate polling thread in the backend
     data_acquisition_active = true;
 }
