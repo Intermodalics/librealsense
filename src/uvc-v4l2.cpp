@@ -488,6 +488,7 @@ namespace rsimpl
                 }
                 
                 // Motion events polling pipe
+                std::cout << "number of claimed interface = " << claimed_interfaces.size() << std::endl;
                 if (claimed_interfaces.size())
                 {
                     std::cout << "uvc-v4l2: creating data channel thread" << std::endl;
@@ -551,14 +552,23 @@ namespace rsimpl
 
         void claim_interface(device & device, const guid & /*interface_guid*/, int interface_number)
         {
+            std::cout << "uvc-v4l2: claim_interface" << std::endl;
             if(!device.usb_handle)
             {
+                std::cout << "uvc-v4l2: claim_interface device no usb handle, calling libusb_open" << std::endl;
                 int status = libusb_open(device.usb_device, &device.usb_handle);
-                if(status < 0) throw std::runtime_error(to_string() << "libusb_open(...) returned " << libusb_error_name(status));
+                if(status < 0) {
+                    std::cout << "uvc-v4l2: libusb_open(...) returned " << libusb_error_name(status) << std::endl;
+                    throw std::runtime_error(to_string() << "libusb_open(...) returned " << libusb_error_name(status));
+                }
             }
 
             int status = libusb_claim_interface(device.usb_handle, interface_number);
-            if(status < 0) throw std::runtime_error(to_string() << "libusb_claim_interface(...) returned " << libusb_error_name(status));
+            if(status < 0) {
+                std::cout << "libusb_claim_interface(...) returned " << libusb_error_name(status) << std::endl;
+                throw std::runtime_error(to_string() << "libusb_claim_interface(...) returned " << libusb_error_name(status));
+            }
+            std::cout << "uvc-v4l2: adding new claimed_interface" << std::endl;
             device.claimed_interfaces.push_back(interface_number);
         }
         void claim_aux_interface(device & device, const guid & interface_guid, int interface_number)
