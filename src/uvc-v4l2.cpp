@@ -360,6 +360,8 @@ namespace rsimpl
 
                 // TODO - replace hard-coded values : 0x82 and 1000
                 int res = libusb_interrupt_transfer(handle, 0x84, buffer, interrupt_buf_size, &num_bytes, timeout);
+                std::cout << "uvc-v4l2: length: " << interrupt_buf_size << std::endl;
+                std::cout << "uvc-v4l2: actual num bytes transferred: " << num_bytes << std::endl;
                 std::cout << "uvc-v4l2: res = " << res << std::endl;
                 if (0 == res)
                 {
