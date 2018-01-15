@@ -237,15 +237,18 @@ void rs_device_base::start(rs_source source)
     }
     else if (source == RS_SOURCE_VIDEO)
     {
+        std::cout << "source is RS_SOURCE_VIDEO" << std::endl;
         start_video_streaming();
     }
     else if (source == RS_SOURCE_ALL)
     {
+        std::cout << "source is RS_SOURCE_ALL" << std::endl;
         start(RS_SOURCE_MOTION_TRACKING);
         start(RS_SOURCE_VIDEO);
     }
     else
     {
+        std::cout << "unsupported streaming source!" << std::endl;
         throw std::runtime_error("unsupported streaming source!");
     }
 }

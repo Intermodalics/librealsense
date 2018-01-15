@@ -498,7 +498,7 @@ namespace rsimpl
                         while (!data_stop)
                         {
                             std::cout << "uvc-v4l2: running data channel thread" << std::endl;
-                            subdevice::poll_interrupts(this->usb_handle, data_channel_subs, 100);
+                            subdevice::poll_interrupts(this->usb_handle, data_channel_subs, 1000);
                         }
                     });
                 }
