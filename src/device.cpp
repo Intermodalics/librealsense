@@ -184,6 +184,8 @@ void rs_device_base::start_motion_tracking()
                         }
                     }
                 }
+            } else {
+                std::cout << "rs_device_base::start_motion_tracking motion module is NOT ready" << std::endl; 
             }
         });
         std::cout << "rs_device_base::start_motion_tracking set_subdevice_data_channel_handler done" << std::endl;

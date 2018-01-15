@@ -353,18 +353,25 @@ namespace rsimpl
 
             static void poll_interrupts(libusb_device_handle *handle, const std::vector<subdevice *> & subdevices, uint16_t timeout)
             {
+                std::cout << "uvc-v4l2: poll_interrupts" << std::endl;
                 static const unsigned short interrupt_buf_size = 0x400;
                 uint8_t buffer[interrupt_buf_size];                       /* 64 byte transfer buffer  - dedicated channel*/
                 int num_bytes             = 0;                           /* Actual bytes transferred. */
 
                 // TODO - replace hard-coded values : 0x82 and 1000
                 int res = libusb_interrupt_transfer(handle, 0x84, buffer, interrupt_buf_size, &num_bytes, timeout);
+                std::cout << "uvc-v4l2: res = " << res << std::endl;
                 if (0 == res)
                 {
+                    std::cout << "uvc-v4l2: res is 0, Propagate the data to device layer" << std::endl;
                     // Propagate the data to device layer
-                    for(auto & sub : subdevices)
-                        if (sub->channel_data_callback)
+                    for(auto & sub : subdevices) {
+                        std::cout << "propagate to subdevice" << std::endl;
+                        if (sub->channel_data_callback) {
+                            std::cout << "propagate callback" << std::endl;
                             sub->channel_data_callback(buffer, num_bytes);
+                        }
+                    }
                 }
                 else
                 {
@@ -372,8 +379,10 @@ namespace rsimpl
                     {
                     case LIBUSB_ERROR_TIMEOUT :
                         LOG_WARNING("interrupt e.p. timeout");
+                        std::cout << "uvc-v4l2: interrupt e.p. timeout" << std::endl;
                         break;
                     default:
+                         std::cout << "uvc-v4l2: USB Interrupt end-point error" << std::endl;
                         throw std::runtime_error(to_string() << "USB Interrupt end-point error " << libusb_strerror((libusb_error)res));
                         break;
                     }
@@ -458,7 +467,22 @@ namespace rsimpl
                     std::cout << "uvc-v4l2: add subdevice" << std::endl;                  
                     if (sub->channel_data_callback)
                     {   
-                        std::cout << "uvc-v4l2: add subdchannel" << std::endl; 
+                        std::cout << "uvc-v4l2: add subdevice channel" << std::endl;
+
+                        std::cout << "uvc-v4l2: sub name" << sub->dev_name <<  std::endl;
+                        std::cout << "uvc-v4l2: sub busnum" << sub->busnum <<  std::endl;
+                        std::cout << "uvc-v4l2: sub devnum" << sub->devnum<<  std::endl;
+                        std::cout << "uvc-v4l2: sub parent_devnum" << sub->parent_devnum <<  std::endl;
+                        std::cout << "uvc-v4l2: sub vid" << sub->vid <<  std::endl;
+                        std::cout << "uvc-v4l2: sub pid" << sub->pid <<  std::endl;
+                        std::cout << "uvc-v4l2: sub mi" << sub->mi <<  std::endl;
+                        std::cout << "uvc-v4l2: sub fd" << sub->fd <<  std::endl;
+                        std::cout << "uvc-v4l2: sub width" << sub->width <<  std::endl;
+                        std::cout << "uvc-v4l2: sub height" << sub->height <<  std::endl;
+                        std::cout << "uvc-v4l2: sub format" << sub->format <<  std::endl;
+                        std::cout << "uvc-v4l2: sub fps" << sub->fps <<  std::endl;
+                        std::cout << "uvc-v4l2: sub is_capturing" << sub->is_capturing <<  std::endl;
+
                         data_channel_subs.push_back(sub.get());
                     }
                 }
