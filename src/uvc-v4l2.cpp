@@ -454,9 +454,11 @@ namespace rsimpl
                 std::cout << "uvc-v4l2: start_data_acquisition" << std::endl;
                 std::vector<subdevice *> data_channel_subs;
                 for (auto & sub : subdevices)
-                {                   
+                { 
+                    std::cout << "uvc-v4l2: add subdevice" << std::endl;                  
                     if (sub->channel_data_callback)
-                    {                        
+                    {   
+                        std::cout << "uvc-v4l2: add subdchannel" << std::endl; 
                         data_channel_subs.push_back(sub.get());
                     }
                 }
@@ -464,11 +466,14 @@ namespace rsimpl
                 // Motion events polling pipe
                 if (claimed_interfaces.size())
                 {
+                    std::cout << "uvc-v4l2: creating data channel thread" << std::endl;
                     data_channel_thread = std::thread([this, data_channel_subs]()
                     {
+                        std::cout << "uvc-v4l2: starting data channel thread" << std::endl;
                         // Polling 100ms timeout
                         while (!data_stop)
                         {
+                            std::cout << "uvc-v4l2: running data channel thread" << std::endl;
                             subdevice::poll_interrupts(this->usb_handle, data_channel_subs, 100);
                         }
                     });
